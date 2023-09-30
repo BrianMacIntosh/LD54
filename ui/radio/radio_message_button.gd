@@ -5,5 +5,5 @@ extends Button
 @export var message_identifier : StringName
 
 func _pressed():
-	RadioManager.send_radio_player(message_identifier)
+	RadioManager.send_radio_player(RadioManager.current_ui_callsign, message_identifier)
 	RadioManager.hide_menu()

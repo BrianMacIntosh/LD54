@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://crecdw0g6tiqq"]
+[gd_scene load_steps=10 format=3 uid="uid://crecdw0g6tiqq"]
 
 [ext_resource type="Script" path="res://orbits/orbits.gd" id="1_viul5"]
 [ext_resource type="Script" path="res://orbits/circle_line.gd" id="2_2lu5w"]
-[ext_resource type="Material" uid="uid://cajeebg8ma7qc" path="res://orbits/orbit_material.tres" id="2_iclmq"]
+[ext_resource type="Material" uid="uid://cajeebg8ma7qc" path="res://orbits/orbit_material.tres" id="2_tges4"]
+[ext_resource type="Script" path="res://ui/world_anchor.gd" id="4_toftu"]
+[ext_resource type="LabelSettings" uid="uid://bseggfmh7dpqf" path="res://ship/orbital_label_settings.tres" id="4_vplpc"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_lyeeg"]
 _surfaces = [{
@@ -59,21 +61,21 @@ script = ExtResource("1_viul5")
 
 [node name="ring1" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_lyeeg")
-surface_material_override/0 = ExtResource("2_iclmq")
+surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 2.0
 thickness = 0.01
 
 [node name="ring2" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_k6l17")
-surface_material_override/0 = ExtResource("2_iclmq")
+surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 3.0
 thickness = 0.01
 
 [node name="ring3" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_kg5gh")
-surface_material_override/0 = ExtResource("2_iclmq")
+surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 4.0
 thickness = 0.01
@@ -81,7 +83,67 @@ thickness = 0.01
 [node name="ring4" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("ArrayMesh_mu4w0")
-surface_material_override/0 = ExtResource("2_iclmq")
+surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 5.0
 thickness = 0.01
+
+[node name="Ring1LabelAnchor" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.75)
+
+[node name="Control" type="Control" parent="Ring1LabelAnchor"]
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(60, 0)
+script = ExtResource("4_toftu")
+
+[node name="Label" type="Label" parent="Ring1LabelAnchor/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Ring 1 (LEO)"
+label_settings = ExtResource("4_vplpc")
+horizontal_alignment = 1
+
+[node name="Ring2LabelAnchor" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.75)
+
+[node name="Control" type="Control" parent="Ring2LabelAnchor"]
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(60, 0)
+script = ExtResource("4_toftu")
+
+[node name="Label" type="Label" parent="Ring2LabelAnchor/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Ring 2"
+label_settings = ExtResource("4_vplpc")
+horizontal_alignment = 1
+
+[node name="Ring3LabelAnchor" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.75)
+
+[node name="Control" type="Control" parent="Ring3LabelAnchor"]
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(60, 0)
+script = ExtResource("4_toftu")
+
+[node name="Label" type="Label" parent="Ring3LabelAnchor/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Ring 3"
+label_settings = ExtResource("4_vplpc")
+horizontal_alignment = 1

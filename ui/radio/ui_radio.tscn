@@ -108,7 +108,7 @@ message_identifier = &"AltTransfer.Ring2"
 
 [node name="Ring3Button" type="Button" parent="Panel/VBoxContainer/TabContainer/AltTransfer"]
 layout_mode = 2
-text = "Ring 2"
+text = "Ring 3"
 script = ExtResource("1_gpwfy")
 message_identifier = &"AltTransfer.Ring3"
 
