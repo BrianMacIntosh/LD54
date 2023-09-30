@@ -1,6 +1,6 @@
 extends Node3D
 
-# Altitude of the planet surface
+## Altitude of the planet surface
 @export var altitude_surface : float = 1;
 
 var G = 6.67e-11

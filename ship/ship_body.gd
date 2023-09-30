@@ -1,13 +1,13 @@
 extends StaticBody3D
 
-var mouse_inside : bool = false
+@onready var ship_owner = get_parent()
 
 func _input_event(camera, event, position, normal, shape_idx):
-	if mouse_inside:
-		print(event.as_text())
+	if event.is_action("SelectShip"):
+		RadioManager.show_menu(ship_owner.callsign, "RadioRoot")
 
 func _mouse_enter():
-	mouse_inside = true
+	pass
 
 func _mouse_exit():
-	mouse_inside = false
+	pass

@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://u8bwsk8lw4qm"]
+
+[ext_resource type="PackedScene" uid="uid://cuhp0kvejvrgv" path="res://ui/radio/ui_radio.tscn" id="1_amod0"]
+[ext_resource type="PackedScene" uid="uid://b4hu8vxnr8381" path="res://ui/ui_subtitle.tscn" id="2_lnmbi"]
+
+[node name="ui" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ui_radio" parent="." instance=ExtResource("1_amod0")]
+layout_mode = 1
+
+[node name="ui_subtitle" parent="." instance=ExtResource("2_lnmbi")]
+layout_mode = 1

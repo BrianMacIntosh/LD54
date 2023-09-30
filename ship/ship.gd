@@ -2,10 +2,22 @@ extends Node3D
 
 @export var altitude_change_rate : float = 0.1;
 
+## This ship's unique callsign.
+var callsign : StringName = generate_callsign()
+
 var velocity : Vector3 = Vector3()
 var target_altitude = 2;
 
 @onready var orbits = get_tree().get_root().get_node("WorldRoot/orbits");
+
+static func generate_callsign() -> String:
+	var callsign : String = "";
+	callsign += char(randi_range('A'.unicode_at(0), 'Z'.unicode_at(0)))
+	callsign += char(randi_range('A'.unicode_at(0), 'Z'.unicode_at(0)))
+	callsign += char(randi_range('0'.unicode_at(0), '9'.unicode_at(0)))
+	callsign += char(randi_range('0'.unicode_at(0), '9'.unicode_at(0)))
+	callsign += char(randi_range('0'.unicode_at(0), '9'.unicode_at(0)))
+	return callsign
 
 func _process(delta):
 	
