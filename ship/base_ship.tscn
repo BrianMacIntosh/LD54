@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://clgvt3awce1kn"]
+
+[ext_resource type="Script" path="res://ship/ship.gd" id="1_0u4fn"]
+[ext_resource type="PackedScene" uid="uid://cxenukhpj4op8" path="res://ship/ship.blend" id="1_5pmm2"]
+[ext_resource type="Script" path="res://ship/ship_body.gd" id="3_hwren"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_srrj4"]
+radius = 0.25
+
+[node name="base_ship" type="Node3D"]
+script = ExtResource("1_0u4fn")
+
+[node name="ship" parent="." instance=ExtResource("1_5pmm2")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+script = ExtResource("3_hwren")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("SphereShape3D_srrj4")
