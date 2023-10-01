@@ -64,21 +64,18 @@ mesh = SubResource("ArrayMesh_lyeeg")
 surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 2.0
-thickness = 0.01
 
 [node name="ring2" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_k6l17")
 surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 3.0
-thickness = 0.01
 
 [node name="ring3" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_kg5gh")
 surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 4.0
-thickness = 0.01
 
 [node name="ring4" type="MeshInstance3D" parent="."]
 visible = false
@@ -86,7 +83,6 @@ mesh = SubResource("ArrayMesh_mu4w0")
 surface_material_override/0 = ExtResource("2_tges4")
 script = ExtResource("2_2lu5w")
 radius = 5.0
-thickness = 0.01
 
 [node name="Label_Ring1" parent="." instance=ExtResource("4_8e0vi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.75)

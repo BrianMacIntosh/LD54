@@ -3,13 +3,24 @@ extends Node
 var controller_callsign = &"Earth Control"
 
 ## The current listener callsign for the open radio menu
-var current_ui_callsign : StringName
+var current_ui_callsign : StringName : set = set_current_ui_callsign
 
 ## Signal emitted when a radio menu should be shown
 signal on_show_menu(callsign : StringName, category_name : StringName)
 
 ## Signal emitted when a radio message is sent
 signal on_message_sent(speaker_callsign : StringName, text : String)
+
+func set_current_ui_callsign(value):
+	var old_ship = ShipManager.find_ship(current_ui_callsign)
+	if old_ship:
+		old_ship.set_selected(false)
+	
+	current_ui_callsign = value
+	
+	var new_ship = ShipManager.find_ship(current_ui_callsign)
+	if new_ship:
+		new_ship.set_selected(true)
 
 ## Shows the radio menu
 func show_menu(callsign : StringName, category_name : StringName):
@@ -36,7 +47,6 @@ func send_radio_player(to_callsign : StringName, message_name : StringName):
 	ship.receive_player_radio(message_name)
 
 func send_radio_npc(from_callsign : StringName, message_text : String):
-	print(message_text)
 	on_message_sent.emit(from_callsign, message_text)
 
 func deg_to_string(degrees : int) -> String:
@@ -91,9 +101,21 @@ func build_player_message_text(message_name : StringName,
 		&"Departure.Slingshot.270":
 			params["angle"] = RadioManager.deg_to_string(270)
 			return build_slingshot_depart_text(params)
+		&"Landing.Maracaibo":
+			params["dest"] = "Maracaibo"
+			return build_landing_text(params)
+		&"Landing.Johannesburg":
+			params["dest"] = "Johannesburg"
+			return build_landing_text(params)
+		&"Landing.Hyderabad":
+			params["dest"] = "Hyderabad"
+			return build_landing_text(params)
 
 func build_direct_depart_text(params):
 	return "{to}, cleared for direct departure azimuth {angle}, good day.".format(params)
 
 func build_slingshot_depart_text(params):
 	return "{to}, cleared for slingshot departure azimuth {angle}, good day.".format(params)
+
+func build_landing_text(params):
+	return "{to}, cleared for landing at {dest}, contact {dest} Approach, good day.".format(params)

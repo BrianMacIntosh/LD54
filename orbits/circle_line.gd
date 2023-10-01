@@ -2,7 +2,7 @@
 extends MeshInstance3D
 
 @export var radius : float = 1 : set=set_radius
-@export var thickness : float = 0.1 : set=set_thickness
+@export var thickness : float = 0.01 : set=set_thickness
 @export var resolution : float = 0.25 : set=set_resolution
 
 func set_radius(new_value : float):

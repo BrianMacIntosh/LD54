@@ -25,17 +25,42 @@ func create_ship():
 
 func co_spawn_ships():
 	
+	#DEBUG
+	#Engine.time_scale = 3
+	
+	var ship : Ship
+	
 	await get_tree().create_timer(1).timeout
 	
+	#TEMP TEST
+	#ship = create_ship()
+	#ship.generate_arrival(self)
+	#return
+	
 	# Initial ship
-	var ship1 : Ship = create_ship()
-	ship1.generate_departure()
+	ship = create_ship()
+	ship.generate_departure()
 	
 	await ShipManager.on_ship_departure_cleared
 	
-	# Second ship
-	var ship2 = create_ship()
-	ship2.generate_departure()
+	# Second ship: after departure
+	ship = create_ship()
+	ship.generate_departure()
+	
+	await ShipManager.on_ship_takeoff_cleared
+	await get_tree().create_timer(1).timeout
+	
+	# A couple more ships: after takeoff
+	var counter = 3
+	while counter > 0:
+		ship = create_ship()
+		if ship.generate_departure():
+			counter = counter-1
+		await get_tree().create_timer(randf_range(10, 14)).timeout
+	
+	# Arriving ship
+	ship = create_ship()
+	ship.generate_arrival(self)
 
 func get_gravity_accel(radius : float):
 	return G * planet_mass / (radius * radius);

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://j35s856nwinn"]
+
+[ext_resource type="Texture2D" uid="uid://7lppbrnaalk" path="res://ship/nav_lights.png" id="1_j7vxy"]
+
+[resource]
+transparency = 1
+depth_draw_mode = 2
+no_depth_test = true
+albedo_texture = ExtResource("1_j7vxy")
+emission_enabled = true
+emission_texture = ExtResource("1_j7vxy")

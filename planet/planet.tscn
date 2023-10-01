@@ -10,16 +10,16 @@
 script = ExtResource("2_qyx7r")
 
 [node name="Maracaibo" type="Marker3D" parent="planet"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 script = ExtResource("3_djk4j")
 display_name = "Maracaibo"
 
 [node name="Johannesburg" type="Marker3D" parent="planet"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 script = ExtResource("3_djk4j")
 display_name = "Johannesburg"
 
 [node name="Hyderabad" type="Marker3D" parent="planet"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 script = ExtResource("3_djk4j")
 display_name = "Hyderabad"

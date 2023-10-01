@@ -3,8 +3,17 @@ extends Node
 var ships : Dictionary = {}
 var landing_points : Array = []
 
+var danger_radius : float = 0.5
+
 ## Signal emitted when a ship is correctly cleared for departure.
 signal on_ship_departure_cleared(ship : Ship)
+
+## Signal emitted when a ship is correctly cleared for takeoff.
+signal on_ship_takeoff_cleared(ship : Ship)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action("SelectShip"):
+		RadioManager.hide_menu()
 
 ## Registers a new ship with the ship manager.
 func register_ship(ship : Ship):
@@ -18,7 +27,10 @@ func register_landing(landing_point : LandingPoint):
 
 ## Finds and returns the [Ship] with the specified callsign.
 func find_ship(callsign : StringName):
-	return ships[callsign]
+	if ships.has(callsign):
+		return ships[callsign]
+	else:
+		return null
 
 ## Returns a random spaceport on earth's surface
 func get_random_port() -> LandingPoint:

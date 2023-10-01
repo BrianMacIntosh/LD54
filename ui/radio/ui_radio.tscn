@@ -74,6 +74,12 @@ text = "Departure Clearance"
 script = ExtResource("1_rlqm0")
 submenu_name = &"Departure"
 
+[node name="LandButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
+layout_mode = 2
+text = "Landing Clearance"
+script = ExtResource("1_rlqm0")
+submenu_name = &"Landing"
+
 [node name="GoAheadButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
 layout_mode = 2
 text = "Go Ahead"
@@ -180,6 +186,40 @@ layout_mode = 2
 text = "Slingshot"
 script = ExtResource("1_rlqm0")
 submenu_name = &"DepartureSlingshot"
+
+[node name="Landing" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="HeaderLabel" type="Label" parent="Panel/VBoxContainer/TabContainer/Landing"]
+layout_mode = 2
+text = "Landing"
+horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Landing"]
+layout_mode = 2
+theme_type_variation = &"ButtonRadioBack"
+text = "Back"
+script = ExtResource("1_rlqm0")
+submenu_name = &"RadioRoot"
+
+[node name="MaracaiboButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Landing"]
+layout_mode = 2
+text = "Maracaibo"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Landing.Maracaibo"
+
+[node name="JohannesburgButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Landing"]
+layout_mode = 2
+text = "Johannesburg"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Landing.Johannesburg"
+
+[node name="Hyderabad" type="Button" parent="Panel/VBoxContainer/TabContainer/Landing"]
+layout_mode = 2
+text = "Hyderabad"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Landing.Hyderabad"
 
 [node name="DepartureDirect" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
 visible = false

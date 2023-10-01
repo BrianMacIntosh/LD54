@@ -4,7 +4,7 @@ extends Node3D
 enum DepartureMode { Not, Waiting, Gone }
 
 var altitude_change_rate : float = 0.1
-var departure_burn_rate : float = 0.3
+var departure_burn_rate : float = 0.15
 
 ## This ship's unique callsign.
 var callsign : StringName = Ship.generate_callsign()
@@ -12,6 +12,7 @@ var callsign : StringName = Ship.generate_callsign()
 var departure_velocity : Vector3 = Vector3()
 var orbit_direction : float = 1 if randf() < 0.5 else -1
 var target_altitude = 1
+var alt_rate_mult = 0
 var departure_mode : DepartureMode = DepartureMode.Not
 var cleared_depart_style : StringName = &""
 
@@ -39,6 +40,8 @@ static func generate_callsign() -> String:
 
 func _ready() -> void:
 	$Control/CallsignLabel.text = callsign
+	$DangerRadiusMesh.radius = ShipManager.danger_radius
+	set_selected(false)
 	
 	# Send initial welcome message
 	await get_tree().create_timer(2).timeout
@@ -62,8 +65,8 @@ func _process(delta):
 		process_orbit(delta)
 
 func process_depart(delta):
-	if $DepartureBurnTimer.time_left > 0:
-		departure_velocity += departure_velocity.normalized() * delta * departure_burn_rate
+	departure_velocity += departure_velocity.normalized() * delta * departure_burn_rate
+	$EngineFlareScaler.scale = Vector3.ONE * min(1, departure_velocity.length())
 	
 	# apply departure velocity
 	global_position += departure_velocity * delta
@@ -81,18 +84,23 @@ func process_orbit(delta):
 	# determine orbit tangent
 	var tangent = to_planet_dir.cross(Vector3(0,orbit_direction,0))
 	
+	# arrival speed boost
+	var arrival_factor = max(0, altitude - orbits.ring_to_altitude(3))
+	var arrival_speed_mult = 1 + arrival_factor
+	
 	# change orbit altitude
 	var alt_rate_mult_mag = clamp(abs(altitude_delta), 0, 1)
 	alt_rate_mult_mag = 1 - pow(1 - alt_rate_mult_mag, 2)
-	var alt_rate_mult = sign(altitude_delta) * alt_rate_mult_mag
+	var target_alt_rate_mult = sign(altitude_delta) * alt_rate_mult_mag
 	if departure_mode == DepartureMode.Gone:
-		alt_rate_mult = 1
-	global_position += -to_planet_dir * altitude_change_rate * alt_rate_mult * delta
+		target_alt_rate_mult = 1
+	alt_rate_mult = move_toward(alt_rate_mult, target_alt_rate_mult, delta) 
+	global_position += -to_planet_dir * altitude_change_rate * alt_rate_mult * delta * arrival_speed_mult
 	
 	# orbit at the stable speed
 	var stable_speed = orbits.get_orbital_speed(altitude)
 	var stable_velocity = tangent * stable_speed
-	global_position += stable_velocity * delta
+	global_position += stable_velocity * delta * arrival_speed_mult
 	
 	# check if able to depart
 	if departure_mode == DepartureMode.Waiting:
@@ -101,12 +109,19 @@ func process_orbit(delta):
 		if angle_distance < 20:
 			departure_mode = DepartureMode.Gone
 			departure_velocity = stable_velocity
-			$DepartureBurnTimer.start()
+	
+	# flare
+	$EngineFlareScaler.scale = Vector3.ONE * min(1, max(abs(alt_rate_mult), arrival_factor))
 
-func generate_departure():
+func set_selected(state : bool):
+	$SelectedMesh.visible = state
+
+## Returns true on success.
+func generate_departure() -> bool:
 	var port = ShipManager.get_random_free_port()
 	if port == null:
 		queue_free()
+		return false
 	
 	nav_origin = PortInfo.new()
 	nav_origin.landing_point = port
@@ -117,17 +132,25 @@ func generate_departure():
 	if not port.reservations.has(self):
 		port.reservations.append(self)
 	port.add_child(self)
-	
 	position = Vector3.ZERO
+	
+	return true
 
-func generate_arrival():
+## Returns true on success.
+func generate_arrival(sender : Orbits) -> bool:
 	nav_origin = DepartureInfo.new()
-	nav_origin.azimuth = randi_range(0, 359)
+	nav_origin.azimuth = randi_range(0, 1) * 180
 	nav_origin.ring = 4
 	nav_dest = PortInfo.new()
 	nav_dest.landing_point = ShipManager.get_random_port()
+	orbit_direction = -1 if randf() < 0.5 else 1
 	
-	orbits.add_child(self)
+	var spawn_az = nav_origin.azimuth + orbit_direction * 65
+	position = 15 * Vector3(cos(deg_to_rad(spawn_az)), 0, sin(deg_to_rad(spawn_az)))
+	sender.add_child(self)
+	target_altitude = orbits.ring_to_altitude(3)
+	
+	return true;
 
 func get_altitude() -> float:
 	var to_planet : Vector3 = orbits.planet_node.global_position - global_position;
@@ -175,6 +198,12 @@ func receive_player_radio(message : StringName):
 			receive_departure(&"slingshot", 180)
 		&"Departure.Slingshot.270":
 			receive_departure(&"slingshot", 270)
+		&"Landing.Maracaibo":
+			receive_landing(&"Maracaibo")
+		&"Landing.Johannesburg":
+			receive_landing(&"Johannesburg")
+		&"Landing.Hyderabad":
+			receive_landing(&"Hyderabad")
 
 #TODO: cache
 func get_format_params():
@@ -212,6 +241,7 @@ func receive_transfer(ring_index : int):
 		RadioManager.send_radio_npc(callsign, build_text_alt_decline_landed(ring_index))
 	else:
 		target_altitude = orbits.ring_to_altitude(ring_index)
+		departure_mode = DepartureMode.Not
 		RadioManager.send_radio_npc(callsign, build_text_alttransfer(ring_index))
 
 func receive_takeoff(in_direction : StringName):
@@ -219,6 +249,7 @@ func receive_takeoff(in_direction : StringName):
 		RadioManager.send_radio_npc(callsign, build_text_takeoff_decline_landed(in_direction))
 	else:
 		RadioManager.send_radio_npc(callsign, build_text_takeoff(in_direction))
+		ShipManager.on_ship_takeoff_cleared.emit(self)
 		await get_tree().create_timer(2).timeout
 		target_altitude = orbits.ring_to_altitude(1)
 		orbit_direction = 1 if in_direction == &"prograde" else -1
@@ -245,13 +276,22 @@ func receive_departure(in_style : StringName, degrees : int):
 		await get_tree().create_timer(1).timeout
 		departure_mode = DepartureMode.Waiting
 
+func receive_landing(port : StringName):
+	pass #TODO
+
 func build_text_intentions():
 	if departure_mode == DepartureMode.Waiting:
 		return "{callsign} {cleared_depart_style} departure as cleared {nav_dest_az} degrees.".format(get_format_params())
 	elif is_landed():
 		return "%s requesting takeoff to LEO from %s." % [ callsign, "LOCATION" ]
-	else:
+	elif nav_dest is DepartureInfo:
 		return "{callsign} would like to depart at {nav_dest_az} degrees from {nav_dest}".format(get_format_params())
+	elif nav_dest is PortInfo:
+		return "{callsign} would like to land at {nav_dest}.".format(get_format_params())
+	else:
+		assert(false)
+		return "ERROR"
+		
 
 func build_text_alt_decline_landed(_ring_index : int):
 	return "Control, negative transfer, we're still on the ground."
@@ -264,7 +304,7 @@ func build_text_intro():
 	if nav_origin is PortInfo:
 		return "{callsign} requesting takeoff to LEO from {nav_origin}.".format(params)
 	else:
-		return "Good day, {callsign} inbound to earth requesting ring three.".format(params)
+		return "Good day, {callsign} inbound to ring three at {nav_origin_az} degrees.".format(params)
 
 func build_text_depart_decline_arriving():
 	var params = get_format_params()

@@ -1,8 +1,6 @@
 extends Control
 ## From Godot demo Waypoints project
 
-@export var is_static : bool = false
-
 @onready var camera = get_viewport().get_camera_3d()
 @onready var parent = get_parent()
 
@@ -10,8 +8,6 @@ func _ready() -> void:
 	if not parent is Node3D:
 		push_error("The waypoint's parent node must inherit from Node3D.")
 	update_position()
-	if is_static:
-		set_process(false)
 
 func _process(_delta):
 	update_position()
