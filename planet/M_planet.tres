@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://bnwifemsrn0e2"]
+
+[ext_resource type="Texture2D" uid="uid://mfw0dwgavw1i" path="res://planet/planet.png" id="1_jf4ek"]
+[ext_resource type="Texture2D" uid="uid://bg8nftgum6upk" path="res://planet/planet_clearcoat.png" id="2_dm2yb"]
+
+[resource]
+albedo_texture = ExtResource("1_jf4ek")
+metallic = 0.5
+metallic_texture = ExtResource("2_dm2yb")
+roughness = 0.28
+roughness_texture = ExtResource("2_dm2yb")
+clearcoat_texture = ExtResource("2_dm2yb")
+anisotropy = 1.0

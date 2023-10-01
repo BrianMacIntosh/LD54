@@ -1,5 +1,16 @@
-[gd_resource type="Theme" format=3 uid="uid://5gdgt8barsma"]
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://5gdgt8barsma"]
+
+[ext_resource type="FontFile" uid="uid://bak7dkwasd8w0" path="res://ui/Play-Regular.ttf" id="1_a4a7p"]
+[ext_resource type="FontFile" uid="uid://5ovckh8xitok" path="res://ui/Play-Bold.ttf" id="2_wqufn"]
 
 [resource]
+Button/fonts/font = ExtResource("1_a4a7p")
 ButtonRadioBack/base_type = &"Button"
 ButtonRadioBack/colors/font_color = Color(0.501961, 0.501961, 0.501961, 1)
+Label/fonts/font = ExtResource("1_a4a7p")
+LabelSubtitle/base_type = &"RichTextLabel"
+LabelSubtitle/font_sizes/normal_font_size = 20
+LabelWorld/base_type = &"Label"
+LabelWorld/colors/font_color = Color(1, 1, 1, 0.592157)
+LabelWorld/font_sizes/font_size = 16
+LabelWorld/fonts/font = ExtResource("2_wqufn")

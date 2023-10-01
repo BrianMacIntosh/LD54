@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://chguadhjov2ar"]
+[gd_scene load_steps=3 format=3 uid="uid://chguadhjov2ar"]
 
 [ext_resource type="Script" path="res://orbits/label_ring.gd" id="1_j6qvp"]
 [ext_resource type="Script" path="res://ui/world_anchor.gd" id="1_j8jpy"]
-[ext_resource type="LabelSettings" uid="uid://bseggfmh7dpqf" path="res://ship/orbital_label_settings.tres" id="2_xi7mk"]
 
 [node name="Anchor" type="Marker3D"]
 script = ExtResource("1_j6qvp")
@@ -12,7 +11,6 @@ layout_mode = 3
 anchors_preset = 0
 pivot_offset = Vector2(60, 0)
 script = ExtResource("1_j8jpy")
-is_static = true
 
 [node name="Label" type="Label" parent="Control"]
 layout_mode = 1
@@ -21,6 +19,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_type_variation = &"LabelWorld"
 text = "Ring 1 (LEO)"
-label_settings = ExtResource("2_xi7mk")
 horizontal_alignment = 1

@@ -111,7 +111,6 @@ radius = 0.5
 resolution = 0.05
 
 [node name="SelectedMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.165534, 0, 0.986204, 0, 1, 0, -0.986204, 0, -0.165534, 0, 0, 0)
 mesh = SubResource("ArrayMesh_5a3vk")
 surface_material_override/0 = ExtResource("8_aiasp")
 script = ExtResource("6_e6icb")

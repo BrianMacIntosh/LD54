@@ -53,7 +53,6 @@ layout_mode = 2
 tabs_visible = false
 
 [node name="RadioRoot" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="AltTransferButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
@@ -99,6 +98,7 @@ script = ExtResource("1_gpwfy")
 message_identifier = &"SayIntentions"
 
 [node name="AltTransfer" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="HeaderLabel" type="Label" parent="Panel/VBoxContainer/TabContainer/AltTransfer"]

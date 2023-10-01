@@ -11,7 +11,7 @@
 [node name="planet" parent="." instance=ExtResource("1_gyt65")]
 
 [node name="sun" parent="." instance=ExtResource("2_6kanl")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.89781, 0, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.898, 0.7, 0)
 
 [node name="orbits" parent="." instance=ExtResource("3_f5607")]
 

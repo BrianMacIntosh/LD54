@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://ci18bl66hvibr"]
+
+[ext_resource type="Texture2D" uid="uid://bvkbnhhw7dyy2" path="res://planet/planet_clouds.png" id="1_dorkh"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_dorkh")

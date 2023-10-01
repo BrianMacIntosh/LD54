@@ -37,6 +37,7 @@ func hide_menu():
 
 func send_radio_player(to_callsign : StringName, message_name : StringName):
 	var message_text = build_player_message_text(message_name, controller_callsign, to_callsign);
+	message_text = "[color=#888888]" + message_text + "[/color]"
 	on_message_sent.emit(controller_callsign, message_text)
 	
 	# wait for message
