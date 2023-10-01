@@ -7,4 +7,4 @@ func _ready():
 	pass # Replace with function body.
 
 func _process(delta):
-	$planet.rotate_y(deg_to_rad(delta * 360 / day_length));
+	rotate_y(deg_to_rad(delta * 360 / day_length));

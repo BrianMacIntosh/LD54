@@ -5,7 +5,7 @@ extends Node3D
 @export var altitude_surface : float = 1;
 
 var G = 6.67e-11
-@export var planet_mass : float = 8e8;
+@export var planet_mass : float = 9e8;
 
 @export var ship_spawn_interval : float = 5;
 
@@ -19,15 +19,23 @@ func ring_to_altitude(ring : int) -> float:
 func _ready():
 	co_spawn_ships()
 
+func create_ship():
+	var new_ship = ship_prefab.instantiate()
+	return new_ship
+
 func co_spawn_ships():
-	print("co_spawn_ships is starting.")
-	while true:
-		var new_ship = ship_prefab.instantiate();
-		add_child(new_ship);
-		new_ship.position = Vector3(altitude_surface, 0, 0);
-		print("Ship spawned.");
-		await get_tree().create_timer(ship_spawn_interval).timeout;
-		return
+	
+	await get_tree().create_timer(1).timeout
+	
+	# Initial ship
+	var ship1 : Ship = create_ship()
+	ship1.generate_departure()
+	
+	await ShipManager.on_ship_departure_cleared
+	
+	# Second ship
+	var ship2 = create_ship()
+	ship2.generate_departure()
 
 func get_gravity_accel(radius : float):
 	return G * planet_mass / (radius * radius);

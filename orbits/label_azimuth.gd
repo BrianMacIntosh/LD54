@@ -1,4 +1,3 @@
-@tool
 extends Marker3D
 
 @export var degrees : float : set = set_degrees, get = get_degrees

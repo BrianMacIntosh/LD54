@@ -1,4 +1,3 @@
-@tool
 extends Marker3D
 
 @export var label_text : String : set = set_label_text, get = get_label_text

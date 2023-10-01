@@ -93,13 +93,19 @@ script = ExtResource("1_gpwfy")
 message_identifier = &"SayIntentions"
 
 [node name="AltTransfer" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="HeaderLabel" type="Label" parent="Panel/VBoxContainer/TabContainer/AltTransfer"]
 layout_mode = 2
 text = "Altitude Transfer"
 horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer/TabContainer/AltTransfer"]
+layout_mode = 2
+theme_type_variation = &"ButtonRadioBack"
+text = "Back"
+script = ExtResource("1_rlqm0")
+submenu_name = &"RadioRoot"
 
 [node name="Ring1Button" type="Button" parent="Panel/VBoxContainer/TabContainer/AltTransfer"]
 layout_mode = 2
@@ -128,6 +134,13 @@ layout_mode = 2
 text = "Takeoff"
 horizontal_alignment = 1
 
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Takeoff"]
+layout_mode = 2
+theme_type_variation = &"ButtonRadioBack"
+text = "Back"
+script = ExtResource("1_rlqm0")
+submenu_name = &"RadioRoot"
+
 [node name="ProgradeButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Takeoff"]
 layout_mode = 2
 text = "Prograde"
@@ -149,6 +162,13 @@ layout_mode = 2
 text = "Departure"
 horizontal_alignment = 1
 
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Departure"]
+layout_mode = 2
+theme_type_variation = &"ButtonRadioBack"
+text = "Back"
+script = ExtResource("1_rlqm0")
+submenu_name = &"RadioRoot"
+
 [node name="DirectButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Departure"]
 layout_mode = 2
 text = "Direct"
@@ -162,12 +182,20 @@ script = ExtResource("1_rlqm0")
 submenu_name = &"DepartureSlingshot"
 
 [node name="DepartureDirect" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="HeaderLabel" type="Label" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
 layout_mode = 2
 text = "Direct Departure"
 horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
+layout_mode = 2
+theme_type_variation = &"ButtonRadioBack"
+text = "Back"
+script = ExtResource("1_rlqm0")
+submenu_name = &"Departure"
 
 [node name="0Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
 layout_mode = 2
@@ -201,6 +229,13 @@ layout_mode = 2
 layout_mode = 2
 text = "Slingshot Departure"
 horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureSlingshot"]
+layout_mode = 2
+theme_type_variation = &"ButtonRadioBack"
+text = "Back"
+script = ExtResource("1_rlqm0")
+submenu_name = &"Departure"
 
 [node name="0Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureSlingshot"]
 layout_mode = 2

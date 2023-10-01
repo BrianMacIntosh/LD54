@@ -1,6 +1,6 @@
 extends Node
 
-var controller_callsign = &"Approach"
+var controller_callsign = &"Earth Control"
 
 ## The current listener callsign for the open radio menu
 var current_ui_callsign : StringName

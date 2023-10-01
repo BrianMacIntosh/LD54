@@ -15,10 +15,15 @@ var target_altitude = 1
 var departure_mode : DepartureMode = DepartureMode.Not
 var cleared_depart_style : StringName = &""
 
-var nav_origin = 0
-var nav_origin_az = randi_range(0, 3) * 90
-var nav_dest = randi_range(2, 3)
-var nav_dest_az = randi_range(0, 3) * 90
+class DepartureInfo:
+	var azimuth : int
+	var ring : int
+
+class PortInfo:
+	var landing_point
+
+var nav_origin
+var nav_dest
 
 @onready var orbits : Orbits = get_tree().get_root().get_node("WorldRoot/orbits");
 
@@ -33,26 +38,28 @@ static func generate_callsign() -> String:
 	return new_sign
 
 func _ready() -> void:
-	ShipManager.register_ship(self)
 	$Control/CallsignLabel.text = callsign
 	
 	# Send initial welcome message
 	await get_tree().create_timer(2).timeout
 	RadioManager.send_radio_npc(callsign, build_text_intro())
 
+func _enter_tree() -> void:
+	ShipManager.register_ship(self)
+
 func _exit_tree() -> void:
 	ShipManager.unregister_ship(self)
+	
+	if nav_origin is PortInfo:
+		nav_origin.landing_point.reservations.erase(self)
 
 func _process(delta):
 	if get_altitude() <= 1 and target_altitude <= 1:
-		process_landed(delta)
+		pass
 	elif departure_mode == DepartureMode.Gone:
 		process_depart(delta)
 	else:
 		process_orbit(delta)
-	
-func process_landed(delta):
-	pass
 
 func process_depart(delta):
 	if $DepartureBurnTimer.time_left > 0:
@@ -90,11 +97,37 @@ func process_orbit(delta):
 	# check if able to depart
 	if departure_mode == DepartureMode.Waiting:
 		var azimuth = fmod(360 + rad_to_deg(atan2(-to_planet_dir.z, -to_planet_dir.x)), 360)
-		var angle_distance = min(abs(nav_dest_az - azimuth), abs(nav_dest_az + 360 - azimuth))
+		var angle_distance = min(abs(nav_dest.azimuth - azimuth), abs(nav_dest.azimuth + 360 - azimuth))
 		if angle_distance < 20:
 			departure_mode = DepartureMode.Gone
 			departure_velocity = stable_velocity
 			$DepartureBurnTimer.start()
+
+func generate_departure():
+	var port = ShipManager.get_random_free_port()
+	if port == null:
+		queue_free()
+	
+	nav_origin = PortInfo.new()
+	nav_origin.landing_point = port
+	nav_dest = DepartureInfo.new()
+	nav_dest.azimuth = randi_range(0, 3) * 90
+	nav_dest.ring = randi_range(2, 3)
+	
+	if not port.reservations.has(self):
+		port.reservations.append(self)
+	port.add_child(self)
+	
+	position = Vector3.ZERO
+
+func generate_arrival():
+	nav_origin = DepartureInfo.new()
+	nav_origin.azimuth = randi_range(0, 359)
+	nav_origin.ring = 4
+	nav_dest = PortInfo.new()
+	nav_dest.landing_point = ShipManager.get_random_port()
+	
+	orbits.add_child(self)
 
 func get_altitude() -> float:
 	var to_planet : Vector3 = orbits.planet_node.global_position - global_position;
@@ -145,12 +178,24 @@ func receive_player_radio(message : StringName):
 
 #TODO: cache
 func get_format_params():
-	return {
+	var params = {
 		"callsign": str(callsign),
-		"cleared_depart_style": str(cleared_depart_style),
-		"nav_dest_az": RadioManager.deg_to_string(nav_dest_az),
-		"nav_dest": ring_index_to_name(nav_dest)
+		"cleared_depart_style": str(cleared_depart_style)
 	}
+	
+	if nav_dest is DepartureInfo:
+		params["nav_dest_az"] = RadioManager.deg_to_string(nav_dest.azimuth)
+		params["nav_dest"] = ring_index_to_name(nav_dest.ring)
+	elif nav_dest is PortInfo:
+		params["nav_dest"] = nav_dest.landing_point.display_name
+	
+	if nav_origin is DepartureInfo:
+		params["nav_origin_az"] = RadioManager.deg_to_string(nav_origin.azimuth)
+		params["nav_origin"] = ring_index_to_name(nav_origin.ring)
+	elif nav_origin is PortInfo:
+		params["nav_origin"] = nav_origin.landing_point.display_name
+	
+	return params
 
 func ring_index_to_name(ring_index : int) -> String:
 	match ring_index:
@@ -177,17 +222,26 @@ func receive_takeoff(in_direction : StringName):
 		await get_tree().create_timer(2).timeout
 		target_altitude = orbits.ring_to_altitude(1)
 		orbit_direction = 1 if in_direction == &"prograde" else -1
+		nav_origin.landing_point.reservations.erase(self)
+		var prev_pos = global_position
+		get_parent().remove_child(self)
+		orbits.add_child(self)
+		set_owner(orbits)
+		global_position = prev_pos
 
 func receive_departure(in_style : StringName, degrees : int):
-	if is_landed():
+	if nav_dest is PortInfo:
+		RadioManager.send_radio_npc(callsign, build_text_depart_decline_arriving())
+	elif is_landed():
 		RadioManager.send_radio_npc(callsign, build_text_depart_decline_landed(in_style, degrees))
-	elif target_altitude != nav_dest + 1: #HACK: track rings
+	elif target_altitude != nav_dest.ring + 1: #HACK: track rings
 		RadioManager.send_radio_npc(callsign, build_text_depart_decline_wrong_alt(in_style, degrees))
-	elif degrees != nav_dest_az:
+	elif degrees != nav_dest.azimuth:
 		RadioManager.send_radio_npc(callsign, build_text_depart_decline_wrong_deg(in_style, degrees))
 	else:
 		cleared_depart_style = in_style
 		RadioManager.send_radio_npc(callsign, build_text_depart(in_style, degrees))
+		ShipManager.on_ship_departure_cleared.emit(self)
 		await get_tree().create_timer(1).timeout
 		departure_mode = DepartureMode.Waiting
 
@@ -206,10 +260,15 @@ func build_text_alttransfer(ring_index : int):
 	return "Transfering to %s, %s" % [ ring_index_to_name(ring_index), callsign ]
 
 func build_text_intro():
-	if nav_origin == 0:
-		return "%s requesting takeoff to LEO from %s." % [ callsign, "LOCATION" ]
+	var params = get_format_params()
+	if nav_origin is PortInfo:
+		return "{callsign} requesting takeoff to LEO from {nav_origin}.".format(params)
 	else:
-		return "Good day, {callsign} inbound to earth requesting ring three.".format(get_format_params())
+		return "Good day, {callsign} inbound to earth requesting ring three.".format(params)
+
+func build_text_depart_decline_arriving():
+	var params = get_format_params()
+	return "Control, negative departure, we're inbound for {nav_dest}.".format(params)
 
 func build_text_takeoff_decline_landed(_in_direction : StringName):
 	return "Control, negative takeoff, we're already in the air."
@@ -227,10 +286,10 @@ func build_text_depart_decline_wrong_deg(_in_style, degrees):
 	params["degrees"] = RadioManager.deg_to_string(degrees)
 	return "Control, negative {degrees} degrees, we need {nav_dest_az}.".format(params)
 
-func build_text_depart_decline_wrong_alt(_in_style, degrees):
+func build_text_depart_decline_wrong_alt(_in_style, _degrees):
 	var params = get_format_params()
 	return "Control, negative departure, we need {nav_dest}.".format(params)
 
-func build_text_depart(in_style, degrees):
+func build_text_depart(_in_style, _degrees):
 	var params = get_format_params()
 	return "{callsign} cleared for {cleared_depart_style} departure {nav_dest_az} degrees.".format(params)

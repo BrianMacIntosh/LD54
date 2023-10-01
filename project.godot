@@ -24,6 +24,10 @@ ShipManager="*res://ship/ship_manager.gd"
 
 enabled=PackedStringArray()
 
+[gui]
+
+theme/custom="res://ui/default_theme.tres"
+
 [input]
 
 SelectShip={
