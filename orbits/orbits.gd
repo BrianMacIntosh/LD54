@@ -2,22 +2,19 @@ class_name Orbits
 extends Node3D
 
 ## Altitude of the planet surface
-@export var altitude_surface : float = 1;
+@export var altitude_surface : float = 1
 
 var G = 6.67e-11
-@export var planet_mass : float = 9e8;
+@export var planet_mass : float = 9e8
 
-@export var ship_spawn_interval : float = 5;
+@export var ship_spawn_interval : float = 5
 
 @onready var ship_prefab = preload("res://ship/base_ship.tscn")
-@onready var planet_node = get_tree().get_root().get_node("WorldRoot/planet");
+@onready var planet_node = get_tree().get_root().get_node("WorldRoot/planet")
 
 ## Returns the world altitude of the specified ring
 func ring_to_altitude(ring : int) -> float:
 	return ring + altitude_surface
-
-func _ready():
-	co_spawn_ships()
 
 func create_ship() -> Ship:
 	var new_ship = ship_prefab.instantiate()

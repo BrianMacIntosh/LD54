@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://u8bwsk8lw4qm"]
+[gd_scene load_steps=7 format=3 uid="uid://u8bwsk8lw4qm"]
 
 [ext_resource type="PackedScene" uid="uid://cuhp0kvejvrgv" path="res://ui/radio/ui_radio.tscn" id="1_amod0"]
 [ext_resource type="PackedScene" uid="uid://b4hu8vxnr8381" path="res://ui/ui_subtitle.tscn" id="2_lnmbi"]
 [ext_resource type="PackedScene" uid="uid://crg8ttuxcu7kl" path="res://ui/hud/ui_hud.tscn" id="3_dy635"]
 [ext_resource type="PackedScene" uid="uid://ba4t1w86otmdq" path="res://ui/alerts/ui_alerts.tscn" id="4_ukxfq"]
 [ext_resource type="PackedScene" uid="uid://ch53463w14xpg" path="res://ui/game_over/ui_game_over.tscn" id="5_m3ttg"]
+[ext_resource type="PackedScene" uid="uid://6hscvuo21g4m" path="res://ui/main_menu/ui_main_menu.tscn" id="6_pvgx7"]
 
 [node name="ui" type="Control"]
 layout_mode = 3
@@ -28,4 +29,7 @@ layout_mode = 1
 layout_mode = 1
 
 [node name="ui_hud" parent="." instance=ExtResource("3_dy635")]
+layout_mode = 1
+
+[node name="ui_main_menu" parent="." instance=ExtResource("6_pvgx7")]
 layout_mode = 1

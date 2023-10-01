@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dckdbs8obq4uk"]
+[gd_scene load_steps=7 format=3 uid="uid://dckdbs8obq4uk"]
 
 [ext_resource type="PackedScene" uid="uid://l67juc826drv" path="res://planet/planet.tscn" id="1_gyt65"]
 [ext_resource type="PackedScene" uid="uid://b4sqixvcyp84k" path="res://planet/sun.tscn" id="2_6kanl"]
 [ext_resource type="PackedScene" uid="uid://crecdw0g6tiqq" path="res://orbits/orbits.tscn" id="3_f5607"]
 [ext_resource type="PackedScene" uid="uid://chrpyyhfkcyhq" path="res://background/starfield.blend" id="4_vvell"]
 [ext_resource type="PackedScene" uid="uid://u8bwsk8lw4qm" path="res://ui/ui.tscn" id="5_bflc2"]
+[ext_resource type="AudioStream" uid="uid://bbvp4aebsdll" path="res://Screen Saver.mp3" id="6_adg81"]
 
 [node name="WorldRoot" type="Node3D"]
 
@@ -23,3 +24,7 @@ far = 1000.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 
 [node name="ui" parent="." instance=ExtResource("5_bflc2")]
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_adg81")
+autoplay = true

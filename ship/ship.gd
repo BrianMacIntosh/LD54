@@ -206,8 +206,8 @@ func generate_arrival(sender : Orbits) -> bool:
 	nav_dest = PortInfo.new()
 	nav_dest.landing_point = ShipManager.get_random_port()
 	
-	# no prograde arrival because it takes forever to land
-	orbit_direction = -1 # -1 if randf() < 0.5 else 1
+	# -1 for no prograde arrival because it takes forever to land
+	orbit_direction = -1 if randf() < 0.5 else 1
 	
 	var spawn_az = nav_origin.azimuth + orbit_direction * 65
 	position = 15 * Vector3(cos(deg_to_rad(spawn_az)), 0, sin(deg_to_rad(spawn_az)))
