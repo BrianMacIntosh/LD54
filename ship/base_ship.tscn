@@ -9,10 +9,10 @@
 [ext_resource type="Material" uid="uid://c04d0wnosxq1i" path="res://ship/M_engine_flare.tres" id="4_goh1m"]
 [ext_resource type="Script" path="res://ui/world_anchor.gd" id="4_v5x1g"]
 [ext_resource type="Script" path="res://ship/engine_flare.gd" id="5_gntjx"]
-[ext_resource type="Material" uid="uid://crludfa3vdfaq" path="res://orbits/M_danger_inactive.tres" id="6_6qe2d"]
 [ext_resource type="Script" path="res://orbits/circle_line.gd" id="6_e6icb"]
-[ext_resource type="Material" uid="uid://bvcaa2a8iadn2" path="res://orbits/M_selection_reticule.tres" id="8_aiasp"]
 [ext_resource type="Script" path="res://utility/animation_autoplay.gd" id="9_7x2kq"]
+[ext_resource type="Material" uid="uid://crludfa3vdfaq" path="res://ship/M_danger_inactive.tres" id="10_djx6g"]
+[ext_resource type="Material" uid="uid://bvcaa2a8iadn2" path="res://ship/M_selection_reticule.tres" id="12_qn5d8"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_srrj4"]
 radius = 0.25
@@ -104,15 +104,16 @@ wait_time = 5.0
 one_shot = true
 
 [node name="DangerRadiusMesh" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_37hsw")
-surface_material_override/0 = ExtResource("6_6qe2d")
+surface_material_override/0 = ExtResource("10_djx6g")
 script = ExtResource("6_e6icb")
 radius = 0.5
 resolution = 0.05
 
 [node name="SelectedMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_5a3vk")
-surface_material_override/0 = ExtResource("8_aiasp")
+surface_material_override/0 = ExtResource("12_qn5d8")
 script = ExtResource("6_e6icb")
 radius = 0.1
 thickness = 0.03

@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://ch53463w14xpg"]
+
+[ext_resource type="Script" path="res://ui/game_over/ui_game_over.gd" id="1_nxfg3"]
+[ext_resource type="Texture2D" uid="uid://b1jg7r3dp08rs" path="res://ui/game_over/fader.png" id="1_unqlv"]
+[ext_resource type="Script" path="res://ui/game_over/play_again_button.gd" id="3_g0lvi"]
+
+[node name="ui_game_over" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nxfg3")
+
+[node name="Fader" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_unqlv")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"LabelMassive"
+text = "Game Over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Too many infractions."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayAgainButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Play Again"
+script = ExtResource("3_g0lvi")

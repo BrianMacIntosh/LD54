@@ -80,6 +80,7 @@ script = ExtResource("1_rlqm0")
 submenu_name = &"Landing"
 
 [node name="GoAheadButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
+visible = false
 layout_mode = 2
 text = "Go Ahead"
 script = ExtResource("1_gpwfy")

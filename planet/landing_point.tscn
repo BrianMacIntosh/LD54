@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://c36ohcmllxy7f"]
+
+[ext_resource type="Script" path="res://planet/landing_point.gd" id="1_6k77i"]
+[ext_resource type="Script" path="res://ui/world_anchor.gd" id="2_t1srf"]
+
+[node name="LandingPoint" type="Marker3D"]
+script = ExtResource("1_6k77i")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(60, 0)
+script = ExtResource("2_t1srf")
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"LabelWorld"
+text = "AAA"
+horizontal_alignment = 1

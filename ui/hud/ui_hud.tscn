@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://crg8ttuxcu7kl"]
+[gd_scene load_steps=6 format=3 uid="uid://crg8ttuxcu7kl"]
 
 [ext_resource type="FontFile" uid="uid://bak7dkwasd8w0" path="res://ui/Play-Regular.ttf" id="1_luidd"]
+[ext_resource type="Script" path="res://ui/hud/infractions_label.gd" id="2_giwmg"]
+[ext_resource type="Script" path="res://ui/hud/dispatched_label.gd" id="3_ovegp"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_wnudy"]
 font = ExtResource("1_luidd")
@@ -35,8 +37,10 @@ mouse_filter = 2
 layout_mode = 2
 text = "Infractions Remaining: 0"
 label_settings = SubResource("LabelSettings_wnudy")
+script = ExtResource("2_giwmg")
 
 [node name="ShipsDispatched" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "Ships Dispatched: 0"
 label_settings = SubResource("LabelSettings_mj8wr")
+script = ExtResource("3_ovegp")

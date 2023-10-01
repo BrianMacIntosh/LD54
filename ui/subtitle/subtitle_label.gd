@@ -1,12 +1,18 @@
-extends RichTextLabel
-## Rich label that shows the text of radio messages as they are sent.
+extends Control
 
 func _ready():
-	text = ""
+	$Label.text = ""
 	RadioManager.on_message_sent.connect(handle_message_sent)
 
-func handle_message_sent(_speaker_callsign : StringName, in_text : String):
-	text = "[center]%s[/center]" % [ in_text ]
+func handle_message_sent(speaker_callsign : StringName, in_text : String):
+	var is_npc = speaker_callsign != RadioManager.controller_callsign and speaker_callsign != &"TCAS"
+	if is_npc:
+		$KeyedAudio.play()
+		#$NoiseAudio.play()
+	$Label.text = "[center]%s[/center]" % [ in_text ]
 	$HideTimer.start()
 	await $HideTimer.timeout
-	text = ""
+	if is_npc:
+		$NoiseAudio.stop()
+		$ClickAudio.play()
+	$Label.text = ""

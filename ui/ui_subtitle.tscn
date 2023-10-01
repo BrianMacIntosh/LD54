@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4hu8vxnr8381"]
+[gd_scene load_steps=5 format=3 uid="uid://b4hu8vxnr8381"]
 
 [ext_resource type="Script" path="res://ui/subtitle/subtitle_label.gd" id="1_n7suw"]
+[ext_resource type="AudioStream" uid="uid://c64cdq5g73f0e" path="res://radio/radio_cutoff.wav" id="2_aqady"]
+[ext_resource type="AudioStream" uid="uid://mncsni0px88o" path="res://radio/radio_noise.wav" id="3_8cccq"]
+[ext_resource type="AudioStream" uid="uid://b88miaoad2kpy" path="res://radio/radio_keyed.wav" id="4_ottkq"]
 
 [node name="ui_subtitle" type="Control"]
 layout_mode = 3
@@ -10,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("1_n7suw")
 
 [node name="Label" type="RichTextLabel" parent="."]
 layout_mode = 1
@@ -27,7 +31,16 @@ bbcode_enabled = true
 text = "[center]Temporary radio subtitle text.[/center]"
 fit_content = true
 scroll_active = false
-script = ExtResource("1_n7suw")
 
-[node name="HideTimer" type="Timer" parent="Label"]
+[node name="ClickAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_aqady")
+
+[node name="NoiseAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_8cccq")
+
+[node name="KeyedAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_ottkq")
+volume_db = -4.0
+
+[node name="HideTimer" type="Timer" parent="."]
 wait_time = 5.0

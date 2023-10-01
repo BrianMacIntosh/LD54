@@ -15,6 +15,7 @@ var target_altitude = 1
 var alt_rate_mult = 0
 var departure_mode : DepartureMode = DepartureMode.Not
 var cleared_depart_style : StringName = &""
+var landing_mode : DepartureMode = DepartureMode.Not
 
 class DepartureInfo:
 	var azimuth : int
@@ -27,6 +28,7 @@ var nav_origin
 var nav_dest
 
 @onready var orbits : Orbits = get_tree().get_root().get_node("WorldRoot/orbits");
+@onready var danger_radius_mesh = $DangerRadiusMesh
 
 ## Generates a random ship callsign
 static func generate_callsign() -> String:
@@ -40,7 +42,7 @@ static func generate_callsign() -> String:
 
 func _ready() -> void:
 	$Control/CallsignLabel.text = callsign
-	$DangerRadiusMesh.radius = ShipManager.danger_radius
+	danger_radius_mesh.radius = ShipManager.danger_radius
 	set_selected(false)
 	
 	# Send initial welcome message
@@ -57,8 +59,14 @@ func _exit_tree() -> void:
 		nav_origin.landing_point.reservations.erase(self)
 
 func _process(delta):
-	if get_altitude() <= 1 and target_altitude <= 1:
-		pass
+	
+	#HACK
+	danger_radius_mesh.visible = tcas_enabled()
+	
+	if landing_mode == DepartureMode.Gone:
+		process_orbit(delta)
+	elif get_altitude() <= 1 and target_altitude <= 1:
+		pass #on ground
 	elif departure_mode == DepartureMode.Gone:
 		process_depart(delta)
 	else:
@@ -68,11 +76,18 @@ func process_depart(delta):
 	departure_velocity += departure_velocity.normalized() * delta * departure_burn_rate
 	$EngineFlareScaler.scale = Vector3.ONE * min(1, departure_velocity.length())
 	
+	var old_to_planet : Vector3 = orbits.planet_node.global_position - global_position
+	var old_dist_sq = old_to_planet.length_squared()
+	
 	# apply departure velocity
 	global_position += departure_velocity * delta
 	
-	var to_planet : Vector3 = orbits.planet_node.global_position - global_position
-	if to_planet.length_squared() > 10 * 10:
+	var new_to_planet : Vector3 = orbits.planet_node.global_position - global_position
+	var new_dist_sq = new_to_planet.length_squared()
+	
+	if old_dist_sq < 4.5 * 4.5 and new_dist_sq >= 4.5 * 4.5:
+		ShipManager.log_dispatch_success()
+	if new_dist_sq > 10 * 10:
 		queue_free()
 
 func process_orbit(delta):
@@ -103,21 +118,59 @@ func process_orbit(delta):
 	global_position += stable_velocity * delta * arrival_speed_mult
 	
 	# check if able to depart
-	if departure_mode == DepartureMode.Waiting:
-		var azimuth = fmod(360 + rad_to_deg(atan2(-to_planet_dir.z, -to_planet_dir.x)), 360)
+	var azimuth = fmod(360 + rad_to_deg(atan2(-to_planet_dir.z, -to_planet_dir.x)), 360)
+	if departure_mode == DepartureMode.Waiting and abs(altitude_delta) < 0.3:
 		var angle_distance = min(abs(nav_dest.azimuth - azimuth), abs(nav_dest.azimuth + 360 - azimuth))
 		if angle_distance < 20:
 			departure_mode = DepartureMode.Gone
 			departure_velocity = stable_velocity
 	
+	#check if able to land
+	if landing_mode == DepartureMode.Waiting:
+		var time_to_ground = (altitude-1) / altitude_change_rate
+		
+		#predict where target will be at the landing time
+		var target_pos = nav_dest.landing_point.global_position
+		var target_az = rad_to_deg(atan2(target_pos.z, target_pos.x))
+		var planet_rot_speed = 1 / ShipManager.day_length
+		var target_future_az = target_az + time_to_ground * planet_rot_speed
+		
+		#predict where I need to depart from
+		var current_circumference = 2 * PI * altitude
+		var surface_circumference = 2 * PI * 1
+		var current_rot_speed = 360 / (current_circumference / stable_speed)
+		var surface_rot_speed = 360 / (surface_circumference / orbits.get_orbital_speed(1))
+		var avg_rot_speed = (current_rot_speed + surface_rot_speed) / 2
+		var depart_az = target_future_az - avg_rot_speed * time_to_ground
+		depart_az = fmod(720 + depart_az, 360)
+		#HACK: BIG HACK
+		if orbit_direction < 0:
+			depart_az = fmod(depart_az + 270, 360)
+		else:
+			depart_az = fmod(depart_az + 180, 360)
+		#HACK
+		var depart_delta = min(abs(depart_az - azimuth),
+							   abs(depart_az + 360 - azimuth),
+							   abs(depart_az - azimuth - 360))
+		if depart_delta < 10:
+			landing_mode = DepartureMode.Gone
+			target_altitude = 0
+	elif landing_mode == DepartureMode.Gone:
+		if altitude <= 1:
+			ShipManager.log_dispatch_success()
+			queue_free()
+	
 	# flare
 	$EngineFlareScaler.scale = Vector3.ONE * min(1, max(abs(alt_rate_mult), arrival_factor))
+
+func tcas_enabled() -> bool:
+	return not is_landed()
 
 func set_selected(state : bool):
 	$SelectedMesh.visible = state
 
 ## Returns true on success.
-func generate_departure() -> bool:
+func generate_departure(sender : Orbits) -> bool:
 	var port = ShipManager.get_random_free_port()
 	if port == null:
 		queue_free()
@@ -277,11 +330,42 @@ func receive_departure(in_style : StringName, degrees : int):
 		departure_mode = DepartureMode.Waiting
 
 func receive_landing(port : StringName):
-	pass #TODO
+	if is_landed():
+		RadioManager.send_radio_npc(callsign, build_text_landing_declined_ground())
+	elif nav_dest is PortInfo:
+		if port == nav_dest.landing_point.name:
+			RadioManager.send_radio_npc(callsign, build_text_landing_cleared())
+			await get_tree().create_timer(1).timeout
+			landing_mode = DepartureMode.Waiting
+		else:
+			RadioManager.send_radio_npc(callsign, build_text_landing_wrong_port(port))
+	elif nav_dest is DepartureInfo:
+		RadioManager.send_radio_npc(callsign, build_text_landing_declined_departing())
+	else:
+		assert(false)
+
+func build_text_landing_declined_ground():
+	var params = get_format_params()
+	return "Negative landing, control, we're already on the ground. {callsign}.".format(params)
+
+func build_text_landing_cleared():
+	var params = get_format_params()
+	return "Cleared to land {nav_dest}. {callsign}.".format(params)
+
+func build_text_landing_wrong_port(port : StringName):
+	var params = get_format_params()
+	params["cleared_dest"] = port
+	return "Negative {cleared_dest} for {callsign}, we need {nav_dest}.".format(params)
+
+func build_text_landing_declined_departing():
+	var params = get_format_params()
+	return "Negative landing, control, we need to depart {nav_dest}. {callsign}.".format(params)
 
 func build_text_intentions():
 	if departure_mode == DepartureMode.Waiting:
 		return "{callsign} {cleared_depart_style} departure as cleared {nav_dest_az} degrees.".format(get_format_params())
+	elif landing_mode == DepartureMode.Waiting:
+		return "{callsign} landing at {nav_dest} as cleared.".format(get_format_params())
 	elif is_landed():
 		return "%s requesting takeoff to LEO from %s." % [ callsign, "LOCATION" ]
 	elif nav_dest is DepartureInfo:

@@ -33,19 +33,19 @@ func co_spawn_ships():
 	await get_tree().create_timer(1).timeout
 	
 	#TEMP TEST
-	#ship = create_ship()
-	#ship.generate_arrival(self)
-	#return
+#	ship = create_ship()
+#	ship.generate_arrival(self)
+#	return
 	
 	# Initial ship
 	ship = create_ship()
-	ship.generate_departure()
+	ship.generate_departure(self)
 	
 	await ShipManager.on_ship_departure_cleared
 	
 	# Second ship: after departure
 	ship = create_ship()
-	ship.generate_departure()
+	ship.generate_departure(self)
 	
 	await ShipManager.on_ship_takeoff_cleared
 	await get_tree().create_timer(1).timeout
@@ -54,7 +54,7 @@ func co_spawn_ships():
 	var counter = 3
 	while counter > 0:
 		ship = create_ship()
-		if ship.generate_departure():
+		if ship.generate_departure(self):
 			counter = counter-1
 		await get_tree().create_timer(randf_range(10, 14)).timeout
 	

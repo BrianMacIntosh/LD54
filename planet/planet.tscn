@@ -3,7 +3,7 @@
 [ext_resource type="ArrayMesh" uid="uid://dc3fhbfjqqd6x" path="res://planet/planet.obj" id="1_2e6mj"]
 [ext_resource type="Material" uid="uid://bnwifemsrn0e2" path="res://planet/M_planet.tres" id="2_lfrfd"]
 [ext_resource type="Script" path="res://planet/planet_mesh.gd" id="2_qyx7r"]
-[ext_resource type="Script" path="res://planet/landing_point.gd" id="3_djk4j"]
+[ext_resource type="PackedScene" uid="uid://c36ohcmllxy7f" path="res://planet/landing_point.tscn" id="4_xlwqu"]
 [ext_resource type="Material" uid="uid://ci18bl66hvibr" path="res://planet/M_clouds.tres" id="5_b2byl"]
 
 [node name="planet_gd" type="Node3D"]
@@ -13,20 +13,20 @@ mesh = ExtResource("1_2e6mj")
 surface_material_override/0 = ExtResource("2_lfrfd")
 script = ExtResource("2_qyx7r")
 
-[node name="Maracaibo" type="Marker3D" parent="planet"]
+[node name="Maracaibo" parent="planet" instance=ExtResource("4_xlwqu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
-script = ExtResource("3_djk4j")
 display_name = "Maracaibo"
+port_code = "MCB"
 
-[node name="Johannesburg" type="Marker3D" parent="planet"]
+[node name="Johannesburg" parent="planet" instance=ExtResource("4_xlwqu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
-script = ExtResource("3_djk4j")
 display_name = "Johannesburg"
+port_code = "JHB"
 
-[node name="Hyderabad" type="Marker3D" parent="planet"]
+[node name="Hyderabad" parent="planet" instance=ExtResource("4_xlwqu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-script = ExtResource("3_djk4j")
 display_name = "Hyderabad"
+port_code = "HDB"
 
 [node name="clouds" type="MeshInstance3D" parent="planet"]
 transform = Transform3D(1.02, 0, 0, 0, 1.02, 0, 0, 0, 1.02, 0, 0, 0)
