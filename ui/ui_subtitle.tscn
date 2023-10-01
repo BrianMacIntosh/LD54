@@ -15,16 +15,32 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_n7suw")
 
-[node name="Label" type="RichTextLabel" parent="."]
+[node name="PlayerLabel" type="RichTextLabel" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.25
+anchor_left = 0.15
 anchor_top = 1.0
-anchor_right = 0.75
+anchor_right = 0.85
 anchor_bottom = 1.0
-offset_bottom = -75.0
+offset_bottom = -100.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"LabelSubtitlePlayer"
+bbcode_enabled = true
+text = "[center]Temporary radio subtitle text.[/center]"
+fit_content = true
+scroll_active = false
+
+[node name="NpcLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.15
+anchor_top = 1.0
+anchor_right = 0.85
+anchor_bottom = 1.0
+offset_top = -100.0
+grow_horizontal = 2
 mouse_filter = 2
 theme_type_variation = &"LabelSubtitle"
 bbcode_enabled = true
@@ -42,5 +58,8 @@ stream = ExtResource("3_8cccq")
 stream = ExtResource("4_ottkq")
 volume_db = -4.0
 
-[node name="HideTimer" type="Timer" parent="."]
+[node name="NpcHideTimer" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="PlayerHideTimer" type="Timer" parent="."]
 wait_time = 5.0

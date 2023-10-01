@@ -12,6 +12,7 @@ var callsign : StringName = Ship.generate_callsign()
 var departure_velocity : Vector3 = Vector3()
 var orbit_direction : float = 1 if randf() < 0.5 else -1
 var target_altitude = 1
+var altitude = 1
 var alt_rate_mult = 0
 var departure_mode : DepartureMode = DepartureMode.Not
 var cleared_depart_style : StringName = &""
@@ -63,6 +64,9 @@ func _process(delta):
 	#HACK
 	danger_radius_mesh.visible = tcas_enabled()
 	
+	var to_planet : Vector3 = orbits.planet_node.global_position - global_position
+	altitude = to_planet.length()
+	
 	if landing_mode == DepartureMode.Gone:
 		process_orbit(delta)
 	elif get_altitude() <= 1 and target_altitude <= 1:
@@ -92,7 +96,6 @@ func process_depart(delta):
 
 func process_orbit(delta):
 	var to_planet : Vector3 = orbits.planet_node.global_position - global_position
-	var altitude = to_planet.length()
 	var to_planet_dir = to_planet / altitude
 	var altitude_delta = target_altitude - altitude
 	
@@ -160,11 +163,17 @@ func process_orbit(delta):
 			ShipManager.log_dispatch_success()
 			queue_free()
 	
+	# volunteer intentions
+	var new_to_planet : Vector3 = orbits.planet_node.global_position - global_position
+	var new_altitude = new_to_planet.length()
+	if altitude < 1.8 and new_altitude >= 1.8 or altitude > 4.5 and new_altitude <= 4.5:
+		RadioManager.send_radio_npc(callsign, build_text_intentions())
+	
 	# flare
 	$EngineFlareScaler.scale = Vector3.ONE * min(1, max(abs(alt_rate_mult), arrival_factor))
 
 func tcas_enabled() -> bool:
-	return not is_landed()
+	return not is_landed() and altitude < 4.5
 
 func set_selected(state : bool):
 	$SelectedMesh.visible = state
@@ -196,7 +205,9 @@ func generate_arrival(sender : Orbits) -> bool:
 	nav_origin.ring = 4
 	nav_dest = PortInfo.new()
 	nav_dest.landing_point = ShipManager.get_random_port()
-	orbit_direction = -1 if randf() < 0.5 else 1
+	
+	# no prograde arrival because it takes forever to land
+	orbit_direction = -1 # -1 if randf() < 0.5 else 1
 	
 	var spawn_az = nav_origin.azimuth + orbit_direction * 65
 	position = 15 * Vector3(cos(deg_to_rad(spawn_az)), 0, sin(deg_to_rad(spawn_az)))
@@ -369,7 +380,7 @@ func build_text_intentions():
 	elif is_landed():
 		return "%s requesting takeoff to LEO from %s." % [ callsign, "LOCATION" ]
 	elif nav_dest is DepartureInfo:
-		return "{callsign} would like to depart at {nav_dest_az} degrees from {nav_dest}".format(get_format_params())
+		return "{callsign} would like to depart at {nav_dest_az} degrees from {nav_dest}.".format(get_format_params())
 	elif nav_dest is PortInfo:
 		return "{callsign} would like to land at {nav_dest}.".format(get_format_params())
 	else:

@@ -1,7 +1,8 @@
 extends Control
 
 func _ready():
-	$Label.text = ""
+	$PlayerLabel.text = ""
+	$NpcLabel.text = ""
 	RadioManager.on_message_sent.connect(handle_message_sent)
 
 func handle_message_sent(speaker_callsign : StringName, in_text : String):
@@ -9,10 +10,16 @@ func handle_message_sent(speaker_callsign : StringName, in_text : String):
 	if is_npc:
 		$KeyedAudio.play()
 		#$NoiseAudio.play()
-	$Label.text = "[center]%s[/center]" % [ in_text ]
-	$HideTimer.start()
-	await $HideTimer.timeout
-	if is_npc:
+		$NpcLabel.text = "[center]%s[/center]" % [ in_text ]
+		$NpcHideTimer.start()
+		await $NpcHideTimer.timeout
 		$NoiseAudio.stop()
 		$ClickAudio.play()
-	$Label.text = ""
+		$NpcLabel.text = ""
+	else:
+		$PlayerLabel.text = "[center]%s[/center]" % [ in_text ]
+		$PlayerHideTimer.start()
+		await $PlayerHideTimer.timeout
+		$NoiseAudio.stop()
+		$ClickAudio.play()
+		$PlayerLabel.text = ""

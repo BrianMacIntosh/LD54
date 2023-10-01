@@ -19,7 +19,7 @@ func ring_to_altitude(ring : int) -> float:
 func _ready():
 	co_spawn_ships()
 
-func create_ship():
+func create_ship() -> Ship:
 	var new_ship = ship_prefab.instantiate()
 	return new_ship
 
@@ -33,34 +33,45 @@ func co_spawn_ships():
 	await get_tree().create_timer(1).timeout
 	
 	#TEMP TEST
-#	ship = create_ship()
-#	ship.generate_arrival(self)
-#	return
-	
+	#ship = create_ship()
+	#ship.generate_arrival(self)
+	#return
+
 	# Initial ship
 	ship = create_ship()
 	ship.generate_departure(self)
-	
+
 	await ShipManager.on_ship_departure_cleared
-	
+	await get_tree().create_timer(2).timeout
+
 	# Second ship: after departure
 	ship = create_ship()
 	ship.generate_departure(self)
-	
+
 	await ShipManager.on_ship_takeoff_cleared
-	await get_tree().create_timer(1).timeout
-	
+	await get_tree().create_timer(2).timeout
+
 	# A couple more ships: after takeoff
 	var counter = 3
 	while counter > 0:
 		ship = create_ship()
 		if ship.generate_departure(self):
 			counter = counter-1
-		await get_tree().create_timer(randf_range(10, 14)).timeout
-	
+		await get_tree().create_timer(randf_range(17, 21)).timeout
+
 	# Arriving ship
 	ship = create_ship()
 	ship.generate_arrival(self)
+	
+	# Full random
+	while true:
+		var wait_base = 4 + 30/max(1, sqrt(ShipManager.dispatch_successes))
+		await get_tree().create_timer(randf_range(wait_base, wait_base*1.2)).timeout
+		ship = create_ship()
+		if randf() < 0.3:
+			ship.generate_arrival(self)
+		else:
+			ship.generate_departure(self)
 
 func get_gravity_accel(radius : float):
 	return G * planet_mass / (radius * radius);
