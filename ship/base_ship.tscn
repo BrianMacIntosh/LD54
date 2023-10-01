@@ -36,3 +36,7 @@ text = "NN000"
 label_settings = ExtResource("4_4hvlb")
 horizontal_alignment = 1
 vertical_alignment = 2
+
+[node name="DepartureBurnTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true

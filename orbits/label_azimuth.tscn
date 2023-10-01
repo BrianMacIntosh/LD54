@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://dpvnkk1o1f3wr"]
+
+[ext_resource type="Script" path="res://ui/world_anchor.gd" id="1_g6crm"]
+[ext_resource type="Script" path="res://orbits/label_azimuth.gd" id="1_mnhwx"]
+[ext_resource type="LabelSettings" uid="uid://bseggfmh7dpqf" path="res://ship/orbital_label_settings.tres" id="2_sscrr"]
+
+[node name="Pivot" type="Marker3D"]
+script = ExtResource("1_mnhwx")
+
+[node name="Anchor" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.25, 0, 0)
+
+[node name="Control" type="Control" parent="Anchor"]
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(60, 0)
+script = ExtResource("1_g6crm")
+is_static = true
+
+[node name="Label" type="Label" parent="Anchor/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = ExtResource("2_sscrr")
+horizontal_alignment = 1

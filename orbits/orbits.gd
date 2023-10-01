@@ -5,7 +5,7 @@ extends Node3D
 @export var altitude_surface : float = 1;
 
 var G = 6.67e-11
-@export var planet_mass : float = 5e8;
+@export var planet_mass : float = 8e8;
 
 @export var ship_spawn_interval : float = 5;
 

@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://orbits/orbits.gd" id="1_viul5"]
 [ext_resource type="Script" path="res://orbits/circle_line.gd" id="2_2lu5w"]
 [ext_resource type="Material" uid="uid://cajeebg8ma7qc" path="res://orbits/orbit_material.tres" id="2_tges4"]
-[ext_resource type="Script" path="res://ui/world_anchor.gd" id="4_toftu"]
-[ext_resource type="LabelSettings" uid="uid://bseggfmh7dpqf" path="res://ship/orbital_label_settings.tres" id="4_vplpc"]
+[ext_resource type="PackedScene" uid="uid://chguadhjov2ar" path="res://orbits/label_ring.tscn" id="4_8e0vi"]
+[ext_resource type="PackedScene" uid="uid://dpvnkk1o1f3wr" path="res://orbits/label_azimuth.tscn" id="5_kl4rb"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_lyeeg"]
 _surfaces = [{
@@ -88,62 +88,25 @@ script = ExtResource("2_2lu5w")
 radius = 5.0
 thickness = 0.01
 
-[node name="Ring1LabelAnchor" type="Marker3D" parent="."]
+[node name="Label_Ring1" parent="." instance=ExtResource("4_8e0vi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.75)
+label_text = "Ring 1 (LEO)"
 
-[node name="Control" type="Control" parent="Ring1LabelAnchor"]
-layout_mode = 3
-anchors_preset = 0
-pivot_offset = Vector2(60, 0)
-script = ExtResource("4_toftu")
-
-[node name="Label" type="Label" parent="Ring1LabelAnchor/Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Ring 1 (LEO)"
-label_settings = ExtResource("4_vplpc")
-horizontal_alignment = 1
-
-[node name="Ring2LabelAnchor" type="Marker3D" parent="."]
+[node name="Label_Ring2" parent="." instance=ExtResource("4_8e0vi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.75)
+label_text = "Ring 2"
 
-[node name="Control" type="Control" parent="Ring2LabelAnchor"]
-layout_mode = 3
-anchors_preset = 0
-pivot_offset = Vector2(60, 0)
-script = ExtResource("4_toftu")
-
-[node name="Label" type="Label" parent="Ring2LabelAnchor/Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Ring 2"
-label_settings = ExtResource("4_vplpc")
-horizontal_alignment = 1
-
-[node name="Ring3LabelAnchor" type="Marker3D" parent="."]
+[node name="Label_Ring3" parent="." instance=ExtResource("4_8e0vi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.75)
+label_text = "Ring 3"
 
-[node name="Control" type="Control" parent="Ring3LabelAnchor"]
-layout_mode = 3
-anchors_preset = 0
-pivot_offset = Vector2(60, 0)
-script = ExtResource("4_toftu")
+[node name="Az_0" parent="." instance=ExtResource("5_kl4rb")]
 
-[node name="Label" type="Label" parent="Ring3LabelAnchor/Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Ring 3"
-label_settings = ExtResource("4_vplpc")
-horizontal_alignment = 1
+[node name="Az_90" parent="." instance=ExtResource("5_kl4rb")]
+degrees = 90.0
+
+[node name="Az_180" parent="." instance=ExtResource("5_kl4rb")]
+degrees = 180.0
+
+[node name="Az_270" parent="." instance=ExtResource("5_kl4rb")]
+degrees = 270.0

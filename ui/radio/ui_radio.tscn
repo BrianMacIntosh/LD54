@@ -53,6 +53,7 @@ layout_mode = 2
 tabs_visible = false
 
 [node name="RadioRoot" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="AltTransferButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
@@ -84,6 +85,12 @@ layout_mode = 2
 text = "Stand By"
 script = ExtResource("1_gpwfy")
 message_identifier = &"StandBy"
+
+[node name="SayIntentionsButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
+layout_mode = 2
+text = "Say Intentions"
+script = ExtResource("1_gpwfy")
+message_identifier = &"SayIntentions"
 
 [node name="AltTransfer" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
 visible = false
@@ -145,11 +152,76 @@ horizontal_alignment = 1
 [node name="DirectButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Departure"]
 layout_mode = 2
 text = "Direct"
-script = ExtResource("1_gpwfy")
-message_identifier = &"Departure.Direct"
+script = ExtResource("1_rlqm0")
+submenu_name = &"DepartureDirect"
 
 [node name="SlingshotButton" type="Button" parent="Panel/VBoxContainer/TabContainer/Departure"]
 layout_mode = 2
 text = "Slingshot"
+script = ExtResource("1_rlqm0")
+submenu_name = &"DepartureSlingshot"
+
+[node name="DepartureDirect" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
+layout_mode = 2
+
+[node name="HeaderLabel" type="Label" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
+layout_mode = 2
+text = "Direct Departure"
+horizontal_alignment = 1
+
+[node name="0Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
+layout_mode = 2
+text = "0 degrees"
 script = ExtResource("1_gpwfy")
-message_identifier = &"Departure.Slingshot"
+message_identifier = &"Departure.Direct.0"
+
+[node name="90Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
+layout_mode = 2
+text = "90 degrees"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Departure.Direct.90"
+
+[node name="180Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
+layout_mode = 2
+text = "180 degrees"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Departure.Direct.180"
+
+[node name="270Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
+layout_mode = 2
+text = "270 degrees"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Departure.Direct.270"
+
+[node name="DepartureSlingshot" type="VBoxContainer" parent="Panel/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="HeaderLabel" type="Label" parent="Panel/VBoxContainer/TabContainer/DepartureSlingshot"]
+layout_mode = 2
+text = "Slingshot Departure"
+horizontal_alignment = 1
+
+[node name="0Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureSlingshot"]
+layout_mode = 2
+text = "0 degrees"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Departure.Slingshot.0"
+
+[node name="90Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureSlingshot"]
+layout_mode = 2
+text = "90 degrees"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Departure.Slingshot.90"
+
+[node name="180Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureSlingshot"]
+layout_mode = 2
+text = "180 degrees"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Departure.Slingshot.180"
+
+[node name="270Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureSlingshot"]
+layout_mode = 2
+text = "270 degrees"
+script = ExtResource("1_gpwfy")
+message_identifier = &"Departure.Slingshot.270"
