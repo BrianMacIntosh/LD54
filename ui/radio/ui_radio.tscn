@@ -71,7 +71,7 @@ submenu_name = &"Takeoff"
 layout_mode = 2
 text = "Departure Clearance"
 script = ExtResource("1_rlqm0")
-submenu_name = &"Departure"
+submenu_name = &"DepartureDirect"
 
 [node name="LandButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
 layout_mode = 2

@@ -148,9 +148,9 @@ func process_orbit(delta):
 		depart_az = fmod(720 + depart_az, 360)
 		#HACK: BIG HACK
 		if orbit_direction < 0:
-			depart_az = fmod(depart_az + 270, 360)
+			depart_az = fmod(depart_az + 45, 360)
 		else:
-			depart_az = fmod(depart_az + 180, 360)
+			depart_az = fmod(depart_az + 135, 360)
 		#HACK
 		var depart_delta = min(abs(depart_az - azimuth),
 							   abs(depart_az + 360 - azimuth),
@@ -177,6 +177,7 @@ func tcas_enabled() -> bool:
 
 func set_selected(state : bool):
 	$SelectedMesh.visible = state
+	$TakeoffParent.visible = not state
 
 ## Returns true on success.
 func generate_departure(sender : Orbits) -> bool:
@@ -196,6 +197,8 @@ func generate_departure(sender : Orbits) -> bool:
 	port.add_child(self)
 	position = Vector3.ZERO
 	
+	$TakeoffParent/TakeoffAttractor.visible = true
+	
 	return true
 
 ## Returns true on success.
@@ -206,8 +209,7 @@ func generate_arrival(sender : Orbits) -> bool:
 	nav_dest = PortInfo.new()
 	nav_dest.landing_point = ShipManager.get_random_port()
 	
-	# -1 for no prograde arrival because it takes forever to land
-	orbit_direction = -1 if randf() < 0.5 else 1
+	orbit_direction = 1 if randf() < 0.5 else -1
 	
 	var spawn_az = nav_origin.azimuth + orbit_direction * 65
 	position = 15 * Vector3(cos(deg_to_rad(spawn_az)), 0, sin(deg_to_rad(spawn_az)))
@@ -225,7 +227,7 @@ func is_landed() -> bool:
 	return alt <= 1
 
 func generate_reaction_time() -> float:
-	return randf() * 4 + 1
+	return randf() * 3 + 1
 
 func receive_player_radio(message : StringName):
 	await get_tree().create_timer(generate_reaction_time()).timeout
@@ -314,6 +316,7 @@ func receive_takeoff(in_direction : StringName):
 	else:
 		RadioManager.send_radio_npc(callsign, build_text_takeoff(in_direction))
 		ShipManager.on_ship_takeoff_cleared.emit(self)
+		$TakeoffParent/TakeoffAttractor.visible = false
 		await get_tree().create_timer(2).timeout
 		target_altitude = orbits.ring_to_altitude(1)
 		orbit_direction = 1 if in_direction == &"prograde" else -1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://clgvt3awce1kn"]
+[gd_scene load_steps=23 format=3 uid="uid://clgvt3awce1kn"]
 
 [ext_resource type="Script" path="res://ship/ship.gd" id="1_0u4fn"]
 [ext_resource type="ArrayMesh" uid="uid://6qmvmwvm1n2p" path="res://ship/nav_lights.obj" id="2_62i3c"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://utility/animation_autoplay.gd" id="9_7x2kq"]
 [ext_resource type="Material" uid="uid://crludfa3vdfaq" path="res://ship/M_danger_inactive.tres" id="10_djx6g"]
 [ext_resource type="Material" uid="uid://bvcaa2a8iadn2" path="res://ship/M_selection_reticule.tres" id="12_qn5d8"]
+[ext_resource type="Material" uid="uid://li4pvrtw3nlf" path="res://ship/M_attractor.tres" id="14_at007"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_srrj4"]
 radius = 0.25
@@ -58,6 +59,36 @@ tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0.707, 0, 0.707, 2
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l3nal"]
 _data = {
 "ship_selected_loop": SubResource("Animation_hbjfc")
+}
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ffd5h"]
+resource_name = "OrbitMesh"
+_surfaces = [{
+"aabb": AABB(-0.125, 0, -0.216506, 0.375, 1e-05, 0.433013),
+"attribute_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63),
+"format": 4115,
+"index_count": 18,
+"index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 2, 0, 1, 0, 3, 0, 2, 0, 3, 0, 4, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5, 0, 0, 0, 0, 0, 5, 0, 1, 0),
+"primitive": 3,
+"vertex_count": 6,
+"vertex_data": PackedByteArray(154, 153, 25, 62, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 255, 0, 0, 128, 62, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 255, 154, 153, 153, 189, 0, 0, 0, 0, 129, 5, 5, 62, 255, 127, 255, 255, 0, 0, 0, 190, 0, 0, 0, 0, 215, 179, 93, 62, 255, 127, 255, 255, 154, 153, 153, 189, 0, 0, 0, 0, 129, 5, 5, 190, 255, 127, 255, 255, 0, 0, 0, 190, 0, 0, 0, 0, 215, 179, 93, 190, 255, 127, 255, 255)
+}]
+
+[sub_resource type="Animation" id="Animation_bojjl"]
+resource_name = "rotate"
+length = 2.8
+loop_mode = 1
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.7, 1, 0, 0.707, 0, 0.707, 1.4, 1, 0, 1, 0, 0, 2.1, 1, 0, 0.707, 0, -0.707, 2.8, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k7ehv"]
+_data = {
+"rotate": SubResource("Animation_bojjl")
 }
 
 [node name="base_ship" type="Node3D"]
@@ -125,3 +156,22 @@ libraries = {
 }
 script = ExtResource("9_7x2kq")
 track_name = &"ship_selected_loop"
+
+[node name="TakeoffParent" type="Node3D" parent="."]
+
+[node name="TakeoffAttractor" type="MeshInstance3D" parent="TakeoffParent"]
+visible = false
+mesh = SubResource("ArrayMesh_ffd5h")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("14_at007")
+script = ExtResource("6_e6icb")
+radius = 0.2
+thickness = 0.1
+resolution = 0.5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TakeoffParent/TakeoffAttractor"]
+libraries = {
+"": SubResource("AnimationLibrary_k7ehv")
+}
+script = ExtResource("9_7x2kq")
+track_name = &"rotate"

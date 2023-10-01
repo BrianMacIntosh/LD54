@@ -17,7 +17,7 @@ var old_danger_pairs : Array = []
 var danger_radius : float = 0.5
 
 # The length of a day in seconds
-var day_length : float = 60;
+var day_length : float = 180;
 
 var infractions : int = 0
 var infractions_max : int = 3
@@ -68,7 +68,7 @@ func test_distance_infractions():
 
 func issue_tcas_infraction(ship1 : Ship, ship2 : Ship):
 	infractions = infractions + 1
-	RadioManager.send_radio_npc(&"TCAS", "[color=red]TCAS conflict. Infraction issued.[/color]")
+	RadioManager.send_radio_npc(&"TCAS", "[color=red]STCA conflict. Infraction issued.[/color]")
 	var position = (ship1.global_position + ship2.global_position) / 2;
 	on_infraction.emit(&"tcas", position)
 
