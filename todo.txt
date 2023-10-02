@@ -1,0 +1,6 @@
+slingshot departure
+cancel takeoff/departure/landing
+better stars
+planet texture
+
+ship timeout
