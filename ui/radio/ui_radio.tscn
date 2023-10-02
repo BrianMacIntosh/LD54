@@ -87,6 +87,7 @@ script = ExtResource("1_gpwfy")
 message_identifier = &"GoAhead"
 
 [node name="StandByButton" type="Button" parent="Panel/VBoxContainer/TabContainer/RadioRoot"]
+visible = false
 layout_mode = 2
 text = "Stand By"
 script = ExtResource("1_gpwfy")
@@ -236,7 +237,7 @@ layout_mode = 2
 theme_type_variation = &"ButtonRadioBack"
 text = "Back"
 script = ExtResource("1_rlqm0")
-submenu_name = &"Departure"
+submenu_name = &"RadioRoot"
 
 [node name="0Button" type="Button" parent="Panel/VBoxContainer/TabContainer/DepartureDirect"]
 layout_mode = 2
