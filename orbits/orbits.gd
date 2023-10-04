@@ -26,7 +26,7 @@ func co_spawn_ships():
 	#Engine.time_scale = 3
 	
 	var ship : Ship
-	
+	print("Begin co_spawn_ships.");
 	await get_tree().create_timer(1).timeout
 	
 	#TEMP TEST
@@ -35,28 +35,45 @@ func co_spawn_ships():
 	#return
 
 	# Initial ship
+	print("Spawning tutorial ship 1...");
 	ship = create_ship()
+	print("Generating parameters for tutorial ship 1...");
 	ship.generate_departure(self)
+	print("Tutorial ship 1 spawned.");
 
+	print("Waiting for departure to clear...");
 	await ShipManager.on_ship_departure_cleared
+	print("Departure cleared. Waiting 2 seconds...");
 	await get_tree().create_timer(2).timeout
 
 	# Second ship: after departure
+	print("Spawning tutorial ship 2...");
 	ship = create_ship()
+	print("Generating parameters for tutorial ship 2...");
 	ship.generate_departure(self)
+	print("Tutorial ship 2 spawned.");
 
+	print("Waiting for takeoff to clear...");
 	await ShipManager.on_ship_takeoff_cleared
+	print("Takeoff cleared. Waiting 2 seconds...");
 	await get_tree().create_timer(2).timeout
 
 	# A couple more ships: after takeoff
 	var counter = 3
+	print("Spawning more landed ships...");
 	while counter > 0:
+		print("Spawning ship...%d remaining" % counter);
 		ship = create_ship()
+		print("Ship spawned.");
 		if ship.generate_departure(self):
-			counter = counter-1
-		await get_tree().create_timer(randf_range(17, 21)).timeout
+			print("Departure parameters generated.");
+			counter = counter - 1
+			print("Waiting a while to spawn next ship...");
+			await get_tree().create_timer(randf_range(17, 21)).timeout
+			print("Done waiting.")
 
 	# Arriving ship
+	print("Spawning an arriving ship...")
 	ship = create_ship()
 	ship.generate_arrival(self)
 	

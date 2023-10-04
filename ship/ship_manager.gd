@@ -23,6 +23,8 @@ var infractions : int = 0
 var infractions_max : int = 3
 
 var dispatch_successes : int = 0
+var cleared_departures : int = 0
+var cleared_takeoffs : int = 0
 
 ## Signal emitted when a ship is correctly cleared for departure.
 signal on_ship_departure_cleared(ship : Ship)
@@ -86,6 +88,8 @@ func has_danger_pair(ship1 : Ship, ship2 : Ship) -> bool:
 func reset():
 	infractions = 0
 	dispatch_successes = 0
+	cleared_departures = 0
+	cleared_takeoffs = 0
 
 ## Registers a new ship with the ship manager.
 func register_ship(ship : Ship):
@@ -116,6 +120,14 @@ func get_random_port() -> LandingPoint:
 ## Returns a random spaceport without a ship awaiting takeoff
 func get_random_free_port() -> LandingPoint:
 	var free_count = 0
+	
+	#HACK: attempting to find breaking bug
+	if landing_points.size() == 0:
+		landing_points.append(get_tree().get_root().get_node("WorldRoot/planet/planet/Maracaibo"))
+		landing_points.append(get_tree().get_root().get_node("WorldRoot/planet/planet/Johannesburg"))
+		landing_points.append(get_tree().get_root().get_node("WorldRoot/planet/planet/Hyderabad"))
+	assert(landing_points.size() > 0)
+	
 	for port in landing_points:
 		if port.reservations.size() == 0:
 			free_count = free_count + 1
