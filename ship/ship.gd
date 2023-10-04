@@ -315,6 +315,7 @@ func receive_takeoff(in_direction : StringName):
 		RadioManager.send_radio_npc(callsign, build_text_takeoff_decline_landed(in_direction))
 	else:
 		RadioManager.send_radio_npc(callsign, build_text_takeoff(in_direction))
+		ShipManager.cleared_takeoffs = ShipManager.cleared_takeoffs + 1
 		ShipManager.on_ship_takeoff_cleared.emit(self)
 		$TakeoffParent/TakeoffAttractor.visible = false
 		await get_tree().create_timer(2).timeout
@@ -328,6 +329,7 @@ func receive_takeoff(in_direction : StringName):
 		global_position = prev_pos
 
 func receive_departure(in_style : StringName, degrees : int):
+	print("Departure clearance received for %s..." % callsign)
 	if nav_dest is PortInfo:
 		RadioManager.send_radio_npc(callsign, build_text_depart_decline_arriving())
 	elif is_landed():
@@ -337,10 +339,16 @@ func receive_departure(in_style : StringName, degrees : int):
 	elif degrees != nav_dest.azimuth:
 		RadioManager.send_radio_npc(callsign, build_text_depart_decline_wrong_deg(in_style, degrees))
 	else:
+		print("Clearance is correct..." % callsign)
 		cleared_depart_style = in_style
+		print("Sending reply..." % callsign)
 		RadioManager.send_radio_npc(callsign, build_text_depart(in_style, degrees))
+		print("Notifying spawner..." % callsign)
+		ShipManager.cleared_departures = ShipManager.cleared_departures + 1
 		ShipManager.on_ship_departure_cleared.emit(self)
+		print("Delaying 1 second..." % callsign)
 		await get_tree().create_timer(1).timeout
+		print("Waiting to depart..." % callsign)
 		departure_mode = DepartureMode.Waiting
 
 func receive_landing(port : StringName):

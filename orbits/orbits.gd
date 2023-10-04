@@ -54,7 +54,9 @@ func co_spawn_ships():
 	print("Tutorial ship 2 spawned.");
 
 	print("Waiting for takeoff to clear...");
-	await ShipManager.on_ship_takeoff_cleared
+	while ShipManager.cleared_takeoffs < 2:
+		await get_tree().process_frame
+	#await ShipManager.on_ship_takeoff_cleared
 	print("Takeoff cleared. Waiting 2 seconds...");
 	await get_tree().create_timer(2).timeout
 
