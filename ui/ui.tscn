@@ -33,3 +33,14 @@ layout_mode = 1
 
 [node name="ui_main_menu" parent="." instance=ExtResource("6_pvgx7")]
 layout_mode = 1
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 10.0
+offset_right = -10.0
+grow_horizontal = 0
+theme_type_variation = &"LabelCredits"
+text = "1.0.4"
